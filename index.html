@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>WebGL Shapes Demo</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/lib/app.css">
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.3.2/gl-matrix-min.js"></script>
+    
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec4 coords;
+        attribute float pointSize;
+        uniform mat4 transformMatrix;
+        attribute vec4 colors;
+        varying vec4 varyingColors;
+        uniform mat4 perspectiveMatrix;
+        
+        void main(void) {
+            gl_Position = perspectiveMatrix * transformMatrix * coords;
+            gl_PointSize = pointSize;
+            varyingColors = colors;
+        }
+    </script>
+
+    <script id="shader-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec4 color;
+        varying vec4 varyingColors;
+        
+        void main(void) {
+            gl_FragColor = varyingColors;
+        }
+    </script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">WebGL Shapes Demo</a>
+    </nav>
+    <div class="container-fluid">
+        <div class="row first">
+            <div class="col-sm-8 text-center">
+                <canvas id="canvas" width="700" height="700"></canvas>
+            </div>
+            <div class="col-sm-4">
+                <div class="list-group">
+                    <h5>Available shapes</h5>
+                    <a href="#" class="list-group-item list-group-item-action" id="points" onclick="draw(gl.POINTS); getAttributes(); getUniforms();">POINTS</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="line_strip" onclick="draw(gl.LINE_STRIP); getAttributes(); getUniforms();">LINE_STRIP</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="line_loop" onclick="draw(gl.LINE_LOOP); getAttributes(); getUniforms();">LINE_LOOP</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="lines" onclick="draw(gl.LINES); getAttributes(); getUniforms();">LINES</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="triangle_strip" onclick="draw(gl.TRIANGLE_STRIP); getAttributes(); getUniforms();">TRIANGLE_STRIP</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="triangle_fan" onclick="draw(gl.TRIANGLE_FAN); getAttributes(); getUniforms();">TRIANGLE_FAN</a>
+                    <a href="#" class="list-group-item list-group-item-action" id="triangles" onclick="draw(gl.TRIANGLES); getAttributes(); getUniforms();">TRIANGLES</a>
+                </div>
+
+                <div class="attribute-group">
+                    <h5>Active attributes</h5>
+                    <ul id="attributes" class="list-group">
+                    </ul>
+                </div>
+                <div class="attribute-group">
+                    <h5>Active uniforms</h5>
+                    <ul id="uniforms" class="list-group">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="lib/webgl.js"></script>
+</body>
+
+</html>
